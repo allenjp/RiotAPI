@@ -12,9 +12,9 @@ namespace RiotApi.Models
 
     public class Match
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
+        public ICollection<Summoner> Summoners { get; set; }
+
 
     }
 }

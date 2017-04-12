@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.0
+VisualStudioVersion = 15.0.26403.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LOL_Net_Core", "LOL_Net_Core\LOL_Net_Core.csproj", "{8DBCBDA4-397D-4130-B112-5C6A4421F9DE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RiotApi", "LOL_Net_Core\RiotApi.csproj", "{8DBCBDA4-397D-4130-B112-5C6A4421F9DE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
