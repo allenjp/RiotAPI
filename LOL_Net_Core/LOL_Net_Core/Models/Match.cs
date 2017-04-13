@@ -13,8 +13,7 @@ namespace RiotApi.Models
     public class Match
     {
         public int Id { get; set; }
-        public ICollection<Summoner> Summoners { get; set; }
-
-
+        //public ICollection<Summoner> Summoners { get; set; }
+        public int Deaths { get; set; }
     }
 }
