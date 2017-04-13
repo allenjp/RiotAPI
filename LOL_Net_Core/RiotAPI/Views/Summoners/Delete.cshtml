@@ -19,7 +19,14 @@
             @Html.DisplayFor(model => model.Name)
         </dd>
     </dl>
-    
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.IrlName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IrlName)
+        </dd>
+    </dl>
     <form asp-action="Delete">
         <div class="form-actions no-color">
             <input type="submit" value="Delete" class="btn btn-default" /> |
