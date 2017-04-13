@@ -61,7 +61,7 @@ namespace RiotAPI
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            SeedData.Initialize(app.ApplicationServices);
+            SeedData.InitializeSummoners(app.ApplicationServices);
         }
     }
 }

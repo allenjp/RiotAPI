@@ -12,7 +12,7 @@ namespace RiotAPI.Models
         // see here for info:
         // https://docs.microsoft.com/en-us/aspnet/core/tutorials/first-mvc-app/working-with-sql
 
-        public static void Initialize(IServiceProvider serviceProvider)
+        public static void InitializeSummoners(IServiceProvider serviceProvider)
         {
             using (var context = new RiotAPIContext(
                 serviceProvider.GetRequiredService<DbContextOptions<RiotAPIContext>>()))
