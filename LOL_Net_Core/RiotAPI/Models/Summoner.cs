@@ -10,5 +10,6 @@ namespace RiotAPI.Models
         public int ID { get; set; }
         public string Name { get; set; }
         public string IrlName { get; set; }
+        public string Rank { get; set; }
     }
 }

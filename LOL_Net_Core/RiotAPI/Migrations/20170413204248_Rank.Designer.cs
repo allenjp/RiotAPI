@@ -8,9 +8,10 @@ using RiotAPI.Models;
 namespace RiotAPI.Migrations
 {
     [DbContext(typeof(RiotAPIContext))]
-    partial class RiotAPIContextModelSnapshot : ModelSnapshot
+    [Migration("20170413204248_Rank")]
+    partial class Rank
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")
