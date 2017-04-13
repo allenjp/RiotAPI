@@ -7,3 +7,11 @@ C:\projects\riot_c_sharp\LOL_Net_Core\RiotAPI\obj\Debug\netcoreapp1.1\RiotAPI.cs
 C:\projects\riot_c_sharp\LOL_Net_Core\RiotAPI\obj\Debug\netcoreapp1.1\RiotAPI.AssemblyInfo.cs
 C:\projects\riot_c_sharp\LOL_Net_Core\RiotAPI\obj\Debug\netcoreapp1.1\RiotAPI.dll
 C:\projects\riot_c_sharp\LOL_Net_Core\RiotAPI\obj\Debug\netcoreapp1.1\RiotAPI.pdb
+C:\projects\riot_api_app\riot_api_app\LOL_Net_Core\RiotAPI\bin\Debug\netcoreapp1.1\RiotAPI.deps.json
+C:\projects\riot_api_app\riot_api_app\LOL_Net_Core\RiotAPI\bin\Debug\netcoreapp1.1\RiotAPI.runtimeconfig.json
+C:\projects\riot_api_app\riot_api_app\LOL_Net_Core\RiotAPI\bin\Debug\netcoreapp1.1\RiotAPI.runtimeconfig.dev.json
+C:\projects\riot_api_app\riot_api_app\LOL_Net_Core\RiotAPI\bin\Debug\netcoreapp1.1\RiotAPI.dll
+C:\projects\riot_api_app\riot_api_app\LOL_Net_Core\RiotAPI\bin\Debug\netcoreapp1.1\RiotAPI.pdb
+C:\projects\riot_api_app\riot_api_app\LOL_Net_Core\RiotAPI\obj\Debug\netcoreapp1.1\RiotAPI.AssemblyInfo.cs
+C:\projects\riot_api_app\riot_api_app\LOL_Net_Core\RiotAPI\obj\Debug\netcoreapp1.1\RiotAPI.dll
+C:\projects\riot_api_app\riot_api_app\LOL_Net_Core\RiotAPI\obj\Debug\netcoreapp1.1\RiotAPI.pdb
