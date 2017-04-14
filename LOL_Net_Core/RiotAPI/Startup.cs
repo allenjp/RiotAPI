@@ -62,6 +62,7 @@ namespace RiotAPI
             });
 
             SeedData.InitializeSummoners(app.ApplicationServices);
+            SeedData.InitializeChampionsAsync(app.ApplicationServices);
         }
     }
 }
