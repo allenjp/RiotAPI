@@ -10756,15 +10756,15 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Jeff\\.nuget\\packages\\": {}
+    "C:\\Users\\j.allen\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\projects\\riot_c_sharp\\LOL_Net_Core\\RiotAPI\\RiotAPI.csproj",
+      "projectUniqueName": "C:\\projects\\riot_api_app\\riot_api_app\\LOL_Net_Core\\RiotAPI\\RiotAPI.csproj",
       "projectName": "RiotAPI",
-      "projectPath": "C:\\projects\\riot_c_sharp\\LOL_Net_Core\\RiotAPI\\RiotAPI.csproj",
-      "outputPath": "C:\\projects\\riot_c_sharp\\LOL_Net_Core\\RiotAPI\\obj\\",
+      "projectPath": "C:\\projects\\riot_api_app\\riot_api_app\\LOL_Net_Core\\RiotAPI\\RiotAPI.csproj",
+      "outputPath": "C:\\projects\\riot_api_app\\riot_api_app\\LOL_Net_Core\\RiotAPI\\obj\\",
       "projectStyle": "PackageReference",
       "originalTargetFrameworks": [
         "netcoreapp1.1"
