@@ -11,5 +11,19 @@ namespace RiotAPI.Models
         public string Name { get; set; }
         public string PrimeRole { get; set; }
         public string SecondRole { get; set; }
+
+        public Champion()
+        {
+
+        }
+        public Champion(int id, string name, List<String> roles)
+        {
+            ID = id;
+            Name = name;
+            PrimeRole = roles[0];
+            SecondRole = roles[1];
+        }
+
+        
     }
 }

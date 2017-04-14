@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,17 +60,24 @@ namespace RiotAPI.Models
 
         public static async Task InitializeChampionsAsync(IServiceProvider serviceProvider)
         {
-            using (var context = new RiotAPIContext(
-                serviceProvider.GetRequiredService<DbContextOptions<RiotAPIContext>>()))
+            try
             {
-                if (context.Champion.Any())
+                using (var context = new RiotAPIContext(
+                serviceProvider.GetRequiredService<DbContextOptions<RiotAPIContext>>()))
                 {
-                    return; // Champions have been seeded
+                    if (context.Champion.Any())
+                    {
+                        return; // Champions have been seeded
+                    }
+                    else
+                    {
+                        List<Champion> champ_list = await _get_champions_from_riotAsync();
+                    }
                 }
-                else
-                {
-                    List<Champion> champ_list = await _get_champions_from_riotAsync();
-                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
 
@@ -77,18 +85,38 @@ namespace RiotAPI.Models
         {
             List<Champion> champion_list = new List<Champion>();
 
-            string api_url = "https://na1.api.riotgames.com/lol/static-data/v3/champions?champData=image,tags&api_key=3a0fbaee-bea5-48fe-bcc6-0581cf9407e7";
-
-            using (HttpClient client = new HttpClient())
-            using (HttpResponseMessage response = await client.GetAsync(api_url))
-            using (HttpContent content = response.Content)
+            try
             {
-                string result = await content.ReadAsStringAsync();
+                string api_url = "https://na1.api.riotgames.com/lol/static-data/v3/champions?champData=image,tags&api_key=3a0fbaee-bea5-48fe-bcc6-0581cf9407e7";
 
-                if (result != null)
+                using (HttpClient client = new HttpClient())
+                using (HttpResponseMessage response = await client.GetAsync(api_url))
+                using (HttpContent content = response.Content)
                 {
-                    Console.Write(result);
+                    string result = await content.ReadAsStringAsync();
+
+                    if (result != null)
+                    {
+                        JObject jo = JObject.Parse(result);
+                        JToken champ_data = jo["data"];
+
+                        foreach(JToken champ in champ_data)
+                        {
+                            var champ_sub = champ.First;
+                            int id = Int32.Parse(champ_sub["id"].ToString());
+                            string name = champ_sub["name"].ToString();
+                            List<String> roles = champ_sub["tags"].ToString().Split(',').ToList();
+
+                            Champion c = new Champion(id, name, roles);
+
+                            champion_list.Add(c);
+                        }
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
             return champion_list;
         }
