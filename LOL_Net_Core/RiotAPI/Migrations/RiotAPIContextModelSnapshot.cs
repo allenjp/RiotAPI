@@ -32,6 +32,54 @@ namespace RiotAPI.Migrations
                     b.ToTable("Champion");
                 });
 
+            modelBuilder.Entity("RiotAPI.Models.GameType", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("TypeName");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("GameType");
+                });
+
+            modelBuilder.Entity("RiotAPI.Models.Match", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("Assists");
+
+                    b.Property<int?>("ChampID");
+
+                    b.Property<int>("CreepScore");
+
+                    b.Property<int>("Deaths");
+
+                    b.Property<int?>("GameTypeID");
+
+                    b.Property<double>("KDA");
+
+                    b.Property<int>("Kills");
+
+                    b.Property<string>("Lane");
+
+                    b.Property<int?>("SummonerID");
+
+                    b.Property<bool>("Win");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("ChampID");
+
+                    b.HasIndex("GameTypeID");
+
+                    b.HasIndex("SummonerID");
+
+                    b.ToTable("Match");
+                });
+
             modelBuilder.Entity("RiotAPI.Models.Summoner", b =>
                 {
                     b.Property<int>("ID")
@@ -46,6 +94,21 @@ namespace RiotAPI.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("Summoner");
+                });
+
+            modelBuilder.Entity("RiotAPI.Models.Match", b =>
+                {
+                    b.HasOne("RiotAPI.Models.Champion", "Champ")
+                        .WithMany()
+                        .HasForeignKey("ChampID");
+
+                    b.HasOne("RiotAPI.Models.GameType", "GameType")
+                        .WithMany()
+                        .HasForeignKey("GameTypeID");
+
+                    b.HasOne("RiotAPI.Models.Summoner", "Summoner")
+                        .WithMany()
+                        .HasForeignKey("SummonerID");
                 });
         }
     }

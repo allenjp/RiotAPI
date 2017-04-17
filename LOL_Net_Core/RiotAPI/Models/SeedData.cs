@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace RiotAPI.Models
@@ -72,6 +73,18 @@ namespace RiotAPI.Models
                     else
                     {
                         List<Champion> champ_list = await _get_champions_from_riotAsync();
+
+                        using (var transaction = context.Database.BeginTransaction())
+                        {
+                            context.Database.ExecuteSqlCommand("SET IDENTITY_INSERT [dbo].[Champion] ON");
+
+                            context.Champion.AddRange(champ_list);
+                            context.SaveChanges();
+
+                            context.Database.ExecuteSqlCommand("SET IDENTITY_INSERT[dbo].[Champion] OFF");
+
+                            transaction.Commit();
+                        }
                     }
                 }
             }
@@ -97,20 +110,7 @@ namespace RiotAPI.Models
 
                     if (result != null)
                     {
-                        JObject jo = JObject.Parse(result);
-                        JToken champ_data = jo["data"];
-
-                        foreach(JToken champ in champ_data)
-                        {
-                            var champ_sub = champ.First;
-                            int id = Int32.Parse(champ_sub["id"].ToString());
-                            string name = champ_sub["name"].ToString();
-                            List<String> roles = champ_sub["tags"].ToString().Split(',').ToList();
-
-                            Champion c = new Champion(id, name, roles);
-
-                            champion_list.Add(c);
-                        }
+                        champion_list = _parse_champion_data_string(result);
                     }
                 }
             }
@@ -119,6 +119,57 @@ namespace RiotAPI.Models
                 throw ex;
             }
             return champion_list;
+        }
+
+        private static List<Champion> _parse_champion_data_string(String input)
+        {
+            List<Champion> champion_list = new List<Champion>();
+
+            JObject jo = JObject.Parse(input);
+            JToken champ_data = jo["data"];
+
+            foreach (JToken champ in champ_data)
+            {
+                var champ_sub = champ.First;
+                int id = Int32.Parse(champ_sub["id"].ToString());
+                string name = champ_sub["name"].ToString();
+
+                String roles_str = champ_sub["tags"].ToString();
+                List<String> roles_list = _get_champ_roles(roles_str);
+                Champion c = new Champion(id, name, roles_list);
+
+                champion_list.Add(c);
+            }
+            return champion_list;
+        }
+
+        private static List<String> _get_champ_roles(String roles_str)
+        {
+            List<String> roles_list = new List<string>();
+
+            //if (roles_str.Contains(','))
+            //{
+            //    roles_list = roles_str.Split(',').ToList();
+            //}
+            //else
+            //{
+            //    roles_list.Add(roles_str);
+            //    roles_list.Add("");
+            //}
+
+            var reg = new Regex("\".*?\"");
+            var matches = reg.Matches(roles_str);
+            foreach(var item in matches)
+            {
+                roles_list.Add(item.ToString().TrimStart('"').TrimEnd('"'));
+            }
+
+            if (roles_list.Count < 2)
+            {
+                roles_list.Add("");
+            }
+
+            return roles_list;
         }
     }
 }
