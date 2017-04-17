@@ -15,6 +15,29 @@ namespace RiotAPI.Models
         // see here for info:
         // https://docs.microsoft.com/en-us/aspnet/core/tutorials/first-mvc-app/working-with-sql
 
+
+        public static List<Match> InitializeMatches(String summoner_name)
+        {
+            List<Match> match_list = new List<Match>();
+
+            try
+            {
+                int riot_summ_id = _get_summoner_id_by_name(summoner_name);     
+            }
+            catch (Exception ex) 
+            {
+                throw ex;
+            }
+
+            return match_list;
+        }
+
+        private static int _get_summoner_id_by_name(String summoner_name)
+        {
+            int summoner_id = 0;
+            string api_url = string.Format("https://na.api.riotgames.com/api/lol/NA/v1.4/summoner/by-name/{0}?api_key=3a0fbaee-bea5-48fe-bcc6-0581cf9407e7", summoner_name);
+            return summoner_id;
+        }
         public static void InitializeSummoners(IServiceProvider serviceProvider)
         {
             using (var context = new RiotAPIContext(

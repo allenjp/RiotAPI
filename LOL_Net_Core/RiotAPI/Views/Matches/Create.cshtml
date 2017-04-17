@@ -1,0 +1,78 @@
+@model RiotAPI.Models.Match
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Create</h2>
+
+<form asp-action="Create">
+    <div class="form-horizontal">
+        <h4>Match</h4>
+        <hr />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="Kills" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Kills" class="form-control" />
+                <span asp-validation-for="Kills" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Deaths" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Deaths" class="form-control" />
+                <span asp-validation-for="Deaths" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Assists" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Assists" class="form-control" />
+                <span asp-validation-for="Assists" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="KDA" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="KDA" class="form-control" />
+                <span asp-validation-for="KDA" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="CreepScore" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="CreepScore" class="form-control" />
+                <span asp-validation-for="CreepScore" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <div class="checkbox">
+                    <input asp-for="Win" />
+                    <label asp-for="Win"></label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Lane" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Lane" class="form-control" />
+                <span asp-validation-for="Lane" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
