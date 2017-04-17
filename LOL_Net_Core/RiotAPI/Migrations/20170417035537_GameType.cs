@@ -9,6 +9,7 @@ namespace RiotAPI.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            
             migrationBuilder.CreateTable(
                 name: "Champion",
                 columns: table => new
@@ -30,7 +31,8 @@ namespace RiotAPI.Migrations
                 {
                     ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(nullable: true)
+                    Name = table.Column<string>(nullable: true),
+                    IrlName = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -108,11 +110,19 @@ namespace RiotAPI.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Match");
+            //migrationBuilder.DropTable(
+            //    name: "Match");
 
-            migrationBuilder.DropTable(
-                name: "GameType");
+            //migrationBuilder.DropTable(
+            //    name: "GameType");
+
+            List<String> listOfTables = new List<string> { "Champion", "Summoner", "GameType", "Match" };
+
+            foreach (String tableName in listOfTables)
+            {
+                migrationBuilder.DropTable(
+                    name: tableName);
+            }
         }
     }
 }

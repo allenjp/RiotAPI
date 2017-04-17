@@ -15,7 +15,7 @@ namespace RiotAPI.Controllers
 
         public SummonersController(RiotAPIContext context)
         {
-            _context = context;    
+            _context = context;
         }
 
         // GET: Summoners

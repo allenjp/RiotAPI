@@ -147,16 +147,6 @@ namespace RiotAPI.Models
         {
             List<String> roles_list = new List<string>();
 
-            //if (roles_str.Contains(','))
-            //{
-            //    roles_list = roles_str.Split(',').ToList();
-            //}
-            //else
-            //{
-            //    roles_list.Add(roles_str);
-            //    roles_list.Add("");
-            //}
-
             var reg = new Regex("\".*?\"");
             var matches = reg.Matches(roles_str);
             foreach(var item in matches)

@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h2>Index</h2>
+<h2>Summoners</h2>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -21,6 +21,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.IrlName)
             </th>
+            <th>
+                Matches
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -34,7 +37,10 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.IrlName)
-            </td>  
+            </td>
+            <td>
+                <a asp-area="" asp-controller="Matches" asp-action="Index" asp-route-id="@item.ID">View History
+            </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
