@@ -16,15 +16,20 @@ namespace RiotAPI.Models
         // https://docs.microsoft.com/en-us/aspnet/core/tutorials/first-mvc-app/working-with-sql
 
 
-        public static List<Match> InitializeMatches(String summoner_name)
+        public static async Task<List<Match>> InitializeMatchesAsync(String summoner_name)
         {
             List<Match> match_list = new List<Match>();
 
             try
             {
-                int riot_summ_id = _get_summoner_id_by_name(summoner_name);     
+                int riot_summ_id = await _get_summoner_id_by_nameAsync(summoner_name);
+
+                if (riot_summ_id != 0)
+                {
+                    match_list = await _get_matches_by_idAsync(riot_summ_id);
+                }
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 throw ex;
             }
@@ -32,10 +37,112 @@ namespace RiotAPI.Models
             return match_list;
         }
 
-        private static int _get_summoner_id_by_name(String summoner_name)
+        private static async Task<List<Match>> _get_matches_by_idAsync(int summoner_id)
+        {
+            List<Match> result = new List<Match>();
+
+            string api_url = string.Format("https://na.api.riotgames.com/api/lol/NA/v2.2/matchlist/by-summoner/{0}?api_key=3a0fbaee-bea5-48fe-bcc6-0581cf9407e7", summoner_id);
+
+            using (HttpClient client = new HttpClient())
+            using (HttpResponseMessage response = await client.GetAsync(api_url))
+            using (HttpContent content = response.Content)
+            {
+                string output = await content.ReadAsStringAsync();
+
+                if (output != null)
+                {
+                    result = await _parse_match_data_stringAsync(output);
+                    return result;
+                }
+            }
+            return result;
+        }
+
+        private static async Task<List<Match>> _parse_match_data_stringAsync(String input)
+        {
+            List<Match> result = new List<Match>();
+
+            try
+            {
+                JObject jo = JObject.Parse(input);
+                JToken match_data = jo["matches"];
+
+                foreach (JToken match in match_data)
+                {
+                    //var champ_sub = champ.First;
+                    //int id = Int32.Parse(champ_sub["id"].ToString());
+                    //string name = champ_sub["name"].ToString();
+
+                    //String roles_str = champ_sub["tags"].ToString();
+                    //List<String> roles_list = _get_champ_roles(roles_str);
+                    //Champion c = new Champion(id, name, roles_list);
+
+                    //champion_list.Add(c);
+                    Console.Write(match);
+                    String match_id = match["matchId"].ToString();
+
+                    Match m = await _get_match_infoAsync(match_id);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        private static async Task<Match> _get_match_infoAsync(String m_id)
+        {
+            Match m = new Match();
+
+            string api_url = String.Format("https://na.api.riotgames.com/api/lol/NA/v2.2/match/{0}?api_key=3a0fbaee-bea5-48fe-bcc6-0581cf9407e7", m_id);
+
+            using (HttpClient client = new HttpClient())
+            using (HttpResponseMessage response = await client.GetAsync(api_url))
+            using (HttpContent content = response.Content)
+            {
+                string result = await content.ReadAsStringAsync();
+
+                if (result != null)
+                {
+                    JObject jo = JObject.Parse(result);
+                    Console.Write(jo);
+                }
+            }
+            return m;
+        }
+
+        private static async Task<int> _get_summoner_id_by_nameAsync(String summoner_name)
         {
             int summoner_id = 0;
+
             string api_url = string.Format("https://na.api.riotgames.com/api/lol/NA/v1.4/summoner/by-name/{0}?api_key=3a0fbaee-bea5-48fe-bcc6-0581cf9407e7", summoner_name);
+
+            using (HttpClient client = new HttpClient())
+            using (HttpResponseMessage response = await client.GetAsync(api_url))
+            using (HttpContent content = response.Content)
+            {
+                string result = await content.ReadAsStringAsync();
+
+                if (result != null)
+                {
+                    summoner_id = _get_summoner_id_from_json(result);
+                    return summoner_id;
+                }
+            }
+            return summoner_id;
+        }
+
+        private static int _get_summoner_id_from_json(String input)
+        {
+            int summoner_id = 0;
+
+            JObject jo = JObject.Parse(input);
+            JToken summoner_data = jo.First;
+            var sum_sub = summoner_data.First;
+            summoner_id = Int32.Parse(sum_sub["id"].ToString());
+
             return summoner_id;
         }
         public static void InitializeSummoners(IServiceProvider serviceProvider)

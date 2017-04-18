@@ -35,7 +35,8 @@ namespace RiotAPI.Controllers
 
                 if (summoner != null)
                 {
-                    List<Match> match_list = SeedData.InitializeMatches(summoner.Name);
+                    List<Match> match_list = await SeedData.InitializeMatchesAsync(summoner.Name);
+                    //return View(match_list);
                 }
                 
             }
