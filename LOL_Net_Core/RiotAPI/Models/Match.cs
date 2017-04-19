@@ -28,7 +28,7 @@ namespace RiotAPI.Models
         {
 
         }
-        public Match(int id, string sum_name, int champ_id, int kills, int deaths, int assists, int cs, bool win, string lane, String gt_name, int gameLength, RiotAPIContext context)
+        public Match(String id, string sum_name, int champ_id, int kills, int deaths, int assists, int cs, bool win, string lane, String gt_name, int gameLength, RiotAPIContext context = null)
         {
             _context = context;
 
@@ -39,7 +39,7 @@ namespace RiotAPI.Models
             double kda = _calculate_kda(kills, deaths, assists);
             double cs_per_min = _calculate_cs_per_min(cs, gameLength);
 
-            ID = id;
+            ID = Int32.Parse(id);
             Summoner = sum.Result;
             Champ = champ.Result;
             Kills = kills;

@@ -37,6 +37,7 @@ namespace RiotAPI.Models
                         if (output != null)
                         {
                             match_list = await _parse_match_data_stringAsync(output, summoner_name, riot_summ_id);
+                            Console.Write(match_list);
                         }
                     }
                 }
@@ -62,6 +63,7 @@ namespace RiotAPI.Models
                 {
                     String match_id = match["matchId"].ToString();
                     Match m = await _get_match_infoAsync(match_id, summoner_name, riot_summ_id);
+                    result.Add(m);
                 }
 
             }
@@ -87,8 +89,7 @@ namespace RiotAPI.Models
                 if (result != null)
                 {
                     JObject jo = JObject.Parse(result);
-                    Console.Write(jo);
-
+   
                     // get participant id:
                     int? participant_id = null;
                     var participants = jo["participantIdentities"];
@@ -104,9 +105,20 @@ namespace RiotAPI.Models
                         }
                     }
 
-                    // get champion id:
+                    // get participant obj:
                     var participant_obj = jo["participants"][participant_id];
-                    Console.Write(participant_obj);
+
+                    int champ_id = Int32.Parse(participant_obj["championId"].ToString());
+                    int kills = Int32.Parse(participant_obj["stats"]["kills"].ToString());
+                    int deaths = Int32.Parse(participant_obj["stats"]["deaths"].ToString());
+                    int assists = Int32.Parse(participant_obj["stats"]["assists"].ToString());
+                    int cs = Int32.Parse(participant_obj["stats"]["minionsKilled"].ToString());
+                    string win_string = participant_obj["stats"]["winner"].ToString();
+                    bool win = Convert.ToBoolean(win_string);
+                    string lane = participant_obj["timeline"]["lane"].ToString();
+                    string game_type = jo["queueType"].ToString();
+                    int game_length = Int32.Parse(jo["matchDuration"].ToString()) / 60;
+                    m = new Match(m_id, summoner_name, champ_id, kills, deaths, assists, cs, win, lane, game_type, game_length);
                 }
             }
             return m;
