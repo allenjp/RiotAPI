@@ -17,5 +17,6 @@ namespace RiotAPI.Models
         public DbSet<RiotAPI.Models.Summoner> Summoner { get; set; }
         public DbSet<RiotAPI.Models.Champion> Champion { get; set; }
         public DbSet<RiotAPI.Models.Match> Match { get; set; }
+        public DbSet<RiotAPI.Models.GameType> GameType { get; set; }
     }
 }

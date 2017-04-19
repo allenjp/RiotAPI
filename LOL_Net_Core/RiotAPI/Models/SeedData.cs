@@ -16,7 +16,7 @@ namespace RiotAPI.Models
         // https://docs.microsoft.com/en-us/aspnet/core/tutorials/first-mvc-app/working-with-sql
 
 
-        public static async Task<List<Match>> InitializeMatchesAsync(String summoner_name)
+        public static async Task<List<Match>> GetMatchesAsync(String summoner_name)
         {
             List<Match> match_list = new List<Match>();
 
@@ -26,7 +26,19 @@ namespace RiotAPI.Models
 
                 if (riot_summ_id != 0)
                 {
-                    match_list = await _get_matches_by_idAsync(riot_summ_id);
+                    string api_url = string.Format("https://na.api.riotgames.com/api/lol/NA/v2.2/matchlist/by-summoner/{0}?api_key=3a0fbaee-bea5-48fe-bcc6-0581cf9407e7", riot_summ_id);
+
+                    using (HttpClient client = new HttpClient())
+                    using (HttpResponseMessage response = await client.GetAsync(api_url))
+                    using (HttpContent content = response.Content)
+                    {
+                        string output = await content.ReadAsStringAsync();
+
+                        if (output != null)
+                        {
+                            match_list = await _parse_match_data_stringAsync(output, summoner_name, riot_summ_id);
+                        }
+                    }
                 }
             }
             catch (Exception ex)
@@ -37,28 +49,7 @@ namespace RiotAPI.Models
             return match_list;
         }
 
-        private static async Task<List<Match>> _get_matches_by_idAsync(int summoner_id)
-        {
-            List<Match> result = new List<Match>();
-
-            string api_url = string.Format("https://na.api.riotgames.com/api/lol/NA/v2.2/matchlist/by-summoner/{0}?api_key=3a0fbaee-bea5-48fe-bcc6-0581cf9407e7", summoner_id);
-
-            using (HttpClient client = new HttpClient())
-            using (HttpResponseMessage response = await client.GetAsync(api_url))
-            using (HttpContent content = response.Content)
-            {
-                string output = await content.ReadAsStringAsync();
-
-                if (output != null)
-                {
-                    result = await _parse_match_data_stringAsync(output);
-                    return result;
-                }
-            }
-            return result;
-        }
-
-        private static async Task<List<Match>> _parse_match_data_stringAsync(String input)
+        private static async Task<List<Match>> _parse_match_data_stringAsync(String input, String summoner_name, int riot_summ_id)
         {
             List<Match> result = new List<Match>();
 
@@ -69,19 +60,8 @@ namespace RiotAPI.Models
 
                 foreach (JToken match in match_data)
                 {
-                    //var champ_sub = champ.First;
-                    //int id = Int32.Parse(champ_sub["id"].ToString());
-                    //string name = champ_sub["name"].ToString();
-
-                    //String roles_str = champ_sub["tags"].ToString();
-                    //List<String> roles_list = _get_champ_roles(roles_str);
-                    //Champion c = new Champion(id, name, roles_list);
-
-                    //champion_list.Add(c);
-                    Console.Write(match);
                     String match_id = match["matchId"].ToString();
-
-                    Match m = await _get_match_infoAsync(match_id);
+                    Match m = await _get_match_infoAsync(match_id, summoner_name, riot_summ_id);
                 }
 
             }
@@ -92,7 +72,7 @@ namespace RiotAPI.Models
             return result;
         }
 
-        private static async Task<Match> _get_match_infoAsync(String m_id)
+        private static async Task<Match> _get_match_infoAsync(String m_id, String summoner_name, int riot_summ_id)
         {
             Match m = new Match();
 
@@ -108,6 +88,25 @@ namespace RiotAPI.Models
                 {
                     JObject jo = JObject.Parse(result);
                     Console.Write(jo);
+
+                    // get participant id:
+                    int? participant_id = null;
+                    var participants = jo["participantIdentities"];
+
+                    // find the target id:
+                    foreach (var player in participants)
+                    {
+                        Console.Write(player);
+                        if (Int32.Parse(player["player"]["summonerId"].ToString()) == riot_summ_id)
+                        {
+                            participant_id = Int32.Parse(player["participantId"].ToString());
+                            break;
+                        }
+                    }
+
+                    // get champion id:
+                    var participant_obj = jo["participants"][participant_id];
+                    Console.Write(participant_obj);
                 }
             }
             return m;
