@@ -37,7 +37,7 @@ namespace RiotAPI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public async void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
@@ -62,7 +62,7 @@ namespace RiotAPI
             });
 
             SeedData.InitializeSummoners(app.ApplicationServices);
-            SeedData.InitializeChampionsAsync(app.ApplicationServices);
+            await SeedData.InitializeChampionsAsync(app.ApplicationServices);
         }
     }
 }

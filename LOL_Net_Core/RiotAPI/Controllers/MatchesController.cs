@@ -35,7 +35,8 @@ namespace RiotAPI.Controllers
 
                 if (summoner != null)
                 {
-                    List<Match> match_list = await SeedData.GetMatchesAsync(summoner.Name);
+                    SeedData sd = new SeedData(_context);
+                    List<Match> match_list = await sd.GetMatchesAsync(summoner.Name);
                     //return View(match_list);
                 }
                 
@@ -105,7 +106,7 @@ namespace RiotAPI.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Kills,Deaths,Assists,KDA,CreepScore,Win,Lane")] Match match)
+        public async Task<IActionResult> Edit(long id, [Bind("ID,Kills,Deaths,Assists,KDA,CreepScore,Win,Lane")] Match match)
         {
             if (id != match.ID)
             {
@@ -164,7 +165,7 @@ namespace RiotAPI.Controllers
             return RedirectToAction("Index");
         }
 
-        private bool MatchExists(int id)
+        private bool MatchExists(long id)
         {
             return _context.Match.Any(e => e.ID == id);
         }

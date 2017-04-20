@@ -15,8 +15,14 @@ namespace RiotAPI.Models
         // see here for info:
         // https://docs.microsoft.com/en-us/aspnet/core/tutorials/first-mvc-app/working-with-sql
 
+        private readonly RiotAPIContext _context;
 
-        public static async Task<List<Match>> GetMatchesAsync(String summoner_name)
+        public SeedData(RiotAPIContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<List<Match>> GetMatchesAsync(String summoner_name)
         {
             List<Match> match_list = new List<Match>();
 
@@ -50,7 +56,7 @@ namespace RiotAPI.Models
             return match_list;
         }
 
-        private static async Task<List<Match>> _parse_match_data_stringAsync(String input, String summoner_name, int riot_summ_id)
+        private async Task<List<Match>> _parse_match_data_stringAsync(String input, String summoner_name, int riot_summ_id)
         {
             List<Match> result = new List<Match>();
 
@@ -74,52 +80,61 @@ namespace RiotAPI.Models
             return result;
         }
 
-        private static async Task<Match> _get_match_infoAsync(String m_id, String summoner_name, int riot_summ_id)
+        private async Task<Match> _get_match_infoAsync(String m_id, String summoner_name, int riot_summ_id)
         {
             Match m = new Match();
 
-            string api_url = String.Format("https://na.api.riotgames.com/api/lol/NA/v2.2/match/{0}?api_key=3a0fbaee-bea5-48fe-bcc6-0581cf9407e7", m_id);
-
-            using (HttpClient client = new HttpClient())
-            using (HttpResponseMessage response = await client.GetAsync(api_url))
-            using (HttpContent content = response.Content)
+            try
             {
-                string result = await content.ReadAsStringAsync();
+                string api_url = String.Format("https://na.api.riotgames.com/api/lol/NA/v2.2/match/{0}?api_key=3a0fbaee-bea5-48fe-bcc6-0581cf9407e7", m_id);
 
-                if (result != null)
+                using (HttpClient client = new HttpClient())
+                using (HttpResponseMessage response = await client.GetAsync(api_url))
+                using (HttpContent content = response.Content)
                 {
-                    JObject jo = JObject.Parse(result);
-   
-                    // get participant id:
-                    int? participant_id = null;
-                    var participants = jo["participantIdentities"];
+                    string result = await content.ReadAsStringAsync();
 
-                    // find the target id:
-                    foreach (var player in participants)
+                    if (result != null)
                     {
-                        Console.Write(player);
-                        if (Int32.Parse(player["player"]["summonerId"].ToString()) == riot_summ_id)
+                        JObject jo = JObject.Parse(result);
+
+                        // get participant id:
+                        int? participant_id = null;
+                        var participants = jo["participantIdentities"];
+
+                        // find the target id:
+                        foreach (var player in participants)
                         {
-                            participant_id = Int32.Parse(player["participantId"].ToString());
-                            break;
+                            Console.Write(player);
+                            if (Int32.Parse(player["player"]["summonerId"].ToString()) == riot_summ_id)
+                            {
+                                participant_id = Int32.Parse(player["participantId"].ToString());
+                                break;
+                            }
                         }
+
+                        // get participant obj:
+                        var participant_obj = jo["participants"][participant_id];
+                        string game_type = jo["queueType"].ToString();
+
+                        if (game_type == "")
+                        int champ_id = Int32.Parse(participant_obj["championId"].ToString());
+                        int kills = Int32.Parse(participant_obj["stats"]["kills"].ToString());
+                        int deaths = Int32.Parse(participant_obj["stats"]["deaths"].ToString());
+                        int assists = Int32.Parse(participant_obj["stats"]["assists"].ToString());
+                        int cs = Int32.Parse(participant_obj["stats"]["minionsKilled"].ToString());
+                        string win_string = participant_obj["stats"]["winner"].ToString();
+                        bool win = Convert.ToBoolean(win_string);
+                        string lane = participant_obj["timeline"]["lane"].ToString();
+                        
+                        int game_length = Int32.Parse(jo["matchDuration"].ToString()) / 60;
+                        m = new Match(m_id, summoner_name, champ_id, kills, deaths, assists, cs, win, lane, game_type, game_length, _context);
                     }
-
-                    // get participant obj:
-                    var participant_obj = jo["participants"][participant_id];
-
-                    int champ_id = Int32.Parse(participant_obj["championId"].ToString());
-                    int kills = Int32.Parse(participant_obj["stats"]["kills"].ToString());
-                    int deaths = Int32.Parse(participant_obj["stats"]["deaths"].ToString());
-                    int assists = Int32.Parse(participant_obj["stats"]["assists"].ToString());
-                    int cs = Int32.Parse(participant_obj["stats"]["minionsKilled"].ToString());
-                    string win_string = participant_obj["stats"]["winner"].ToString();
-                    bool win = Convert.ToBoolean(win_string);
-                    string lane = participant_obj["timeline"]["lane"].ToString();
-                    string game_type = jo["queueType"].ToString();
-                    int game_length = Int32.Parse(jo["matchDuration"].ToString()) / 60;
-                    m = new Match(m_id, summoner_name, champ_id, kills, deaths, assists, cs, win, lane, game_type, game_length);
                 }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
             return m;
         }

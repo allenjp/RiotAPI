@@ -11,7 +11,7 @@ namespace RiotAPI.Models
     {
         private readonly RiotAPIContext _context;
 
-        public int ID { get; set; }
+        public long ID { get; set; }
         public Summoner Summoner { get; set; }
         public Champion Champ { get; set; }
         public int Kills { get; set; }
@@ -32,14 +32,14 @@ namespace RiotAPI.Models
         {
             _context = context;
 
-            Task<Summoner> sum =  _get_summoner_from_nameAsync(sum_name, _context);
-            Task<GameType> gt =  _get_gametype_from_name(gt_name, _context);
-            Task<Champion> champ =  _get_champion_from_idAsync(champ_id, _context);
+            Task<Summoner> sum =  _get_summoner_from_nameAsync(sum_name);
+            Task<GameType> gt =  _get_gametype_from_name(gt_name);
+            Task<Champion> champ =  _get_champion_from_idAsync(champ_id);
 
             double kda = _calculate_kda(kills, deaths, assists);
             double cs_per_min = _calculate_cs_per_min(cs, gameLength);
 
-            ID = Int32.Parse(id);
+            ID = long.Parse(id);
             Summoner = sum.Result;
             Champ = champ.Result;
             Kills = kills;
@@ -55,19 +55,19 @@ namespace RiotAPI.Models
 
         
 
-        private async Task<Summoner> _get_summoner_from_nameAsync(string summoner_name, RiotAPIContext context)
+        private async Task<Summoner> _get_summoner_from_nameAsync(string summoner_name)
         {
             var s = await _context.Summoner.SingleOrDefaultAsync(m => m.Name == summoner_name);
             return s;
         }
 
-        private async Task<GameType> _get_gametype_from_name(String gametype_name, RiotAPIContext context)
+        private async Task<GameType> _get_gametype_from_name(String gametype_name)
         {
             var gt = await _context.GameType.SingleOrDefaultAsync(m => m.TypeName == gametype_name);
             return gt;
         }
 
-        private async Task<Champion> _get_champion_from_idAsync(int champ_id, RiotAPIContext context)
+        private async Task<Champion> _get_champion_from_idAsync(int champ_id)
         {
             var c = await _context.Champion.SingleOrDefaultAsync(m => m.ID == champ_id);
             return c;
