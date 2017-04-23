@@ -37,7 +37,7 @@ namespace RiotAPI.Controllers
                 {
                     SeedData sd = new SeedData(_context);
                     List<Match> match_list = await sd.GetMatchesAsync(summoner.Name);
-                    //return View(match_list);
+                    return View(match_list);
                 }
                 
             }

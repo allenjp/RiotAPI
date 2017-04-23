@@ -64,6 +64,15 @@ namespace RiotAPI.Models
         private async Task<GameType> _get_gametype_from_name(String gametype_name)
         {
             var gt = await _context.GameType.SingleOrDefaultAsync(m => m.TypeName == gametype_name);
+
+            if (gt == null)
+            {
+                GameType NewGameType = new GameType(gametype_name);
+                _context.Add(NewGameType);
+            }
+
+            gt = await _context.GameType.SingleOrDefaultAsync(m => m.TypeName == gametype_name);
+
             return gt;
         }
 

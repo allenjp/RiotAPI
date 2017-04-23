@@ -114,10 +114,10 @@ namespace RiotAPI.Models
                         }
 
                         // get participant obj:
-                        var participant_obj = jo["participants"][participant_id];
+                        var participant_obj = jo["participants"][participant_id - 1];
                         string game_type = jo["queueType"].ToString();
 
-                        if (game_type == "")
+                        //if (game_type == "")
                         int champ_id = Int32.Parse(participant_obj["championId"].ToString());
                         int kills = Int32.Parse(participant_obj["stats"]["kills"].ToString());
                         int deaths = Int32.Parse(participant_obj["stats"]["deaths"].ToString());

@@ -15,3 +15,4 @@ C:\projects\riot_api_app\riot_api_app\LOL_Net_Core\RiotAPI\obj\Debug\netcoreapp1
 C:\projects\riot_api_app\riot_api_app\LOL_Net_Core\RiotAPI\obj\Debug\netcoreapp1.1\RiotAPI.dll
 C:\projects\riot_api_app\riot_api_app\LOL_Net_Core\RiotAPI\obj\Debug\netcoreapp1.1\RiotAPI.pdb
 C:\projects\riot_api_app\riot_api_app\LOL_Net_Core\RiotAPI\obj\Debug\netcoreapp1.1\RiotAPI.csprojResolveAssemblyReference.cache
+C:\projects\riot_c_sharp\LOL_Net_Core\RiotAPI\obj\Debug\netcoreapp1.1\RiotAPI.csprojResolveAssemblyReference.cache

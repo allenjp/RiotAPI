@@ -9,5 +9,14 @@ namespace RiotAPI.Models
     {
         public int ID { get; set; }
         public String TypeName { get; set; }
-    }
+
+        public GameType()
+        {
+
+        }
+        public GameType(String typename)
+        {
+            TypeName = typename;
+        }
+    } 
 }
